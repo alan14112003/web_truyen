@@ -9,16 +9,16 @@ final class UserGenderEnum extends Enum
 {
     public const FEMALE = 0;
     public const MALE = 1;
-    public const LES = 2;
-    public const GAY = 3;
+    public const LGBT = 2;
+    public const SECRET = 3;
 
 
     public static function getArrayView() {
         return [
             'Nữ' => self::FEMALE,
             'Nam' => self::MALE,
-            'Les' => self::LES,
-            'Gay' => self::GAY,
+            'LGBT' => self::LGBT,
+            'Bí mật' => self::SECRET,
         ];
     }
     public static function getNameByValue($value) {

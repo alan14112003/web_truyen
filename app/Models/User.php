@@ -73,7 +73,7 @@ class User extends Authenticatable
         if (is_null($this->avatar)) {
             return asset("img/no_face.png");
         }
-        return file_exists("storage/$this->avatar") ?
+        return file_exists("storage/avatars/$this->id") ?
             asset("storage/$this->avatar") : $this->avatar;
     }
 }

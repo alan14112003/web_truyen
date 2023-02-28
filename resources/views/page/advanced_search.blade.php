@@ -103,10 +103,14 @@
         </div>
     </div>
     <div class="row">
+        @if(empty($data->items()))
+            <h2 class="text-danger">Không có truyện nào phù hợp</h2>
+        @else
         @foreach($data as $story)
             <div class="col-lg-2 col-sm-3 col-6">
                 <x-story :story="$story"/>
             </div>
         @endforeach
+        @endif
     </div>
 @endsection

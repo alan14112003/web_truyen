@@ -36,6 +36,10 @@
                         <a href="{{ route('advanced_search') }}?author={{ $story->author->id }}">{{ $story->author->name }}</a>
                     </div>
                     <div class="story_box_left_bottom_item">
+                        <strong>Người đăng:</strong>
+                        <a href="{{ route('show_info', $story->user->id) }}">{{ $story->user->name }}</a>
+                    </div>
+                    <div class="story_box_left_bottom_item">
                         <strong>Thể loại:</strong>
                         <span>{!! $story->categories_link !!}</span>
                     </div>

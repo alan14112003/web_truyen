@@ -17,6 +17,14 @@ Route::prefix('the-loai')->name('categories.')
     ->controller(CategoryController::class)->group(function() {
     Route::get('/', 'index')->name('index');
 });
+Route::controller(UserController::class)->name('info.')
+    ->group(function() {
+
+        Route::get('/thong-tin-ca-nhan/sua/{id}', 'edit')->name('edit');
+        Route::put('/thong-tin-ca-nhan/sua/{id}', 'update')->name('update');
+        Route::delete('/thong-tin-ca-nhan/xoa-anh', 'deleteAvatar')->name('delete_avatar');
+        Route::post('/thong-tin-ca-nhan/sua-anh', 'changeAvatar')->name('change_avatar');
+    });
 
 // truyện của tôi
 Route::prefix('truyen-cua-toi')->name('stories.')->group(function() {

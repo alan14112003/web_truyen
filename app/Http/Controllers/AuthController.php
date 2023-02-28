@@ -46,7 +46,6 @@ class AuthController extends Controller
         return redirect()->route('register')->with('message', 'Bạn cần nhập mật khẩu');
     }
 
-
     public function login()
     {
         return view('login');

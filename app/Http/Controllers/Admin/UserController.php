@@ -201,18 +201,18 @@ class UserController extends Controller
 
     public function kill($id)
     {
-            if ($user = User::onlyTrashed()->find($id)) {
-                if (File::isFile("storage/$user->avatar")) {
-                    $link = "storage/$user->avatar";
-                    $path = "storage/avatars/$user->id";
-                    unlink($link);
-                    rmdir($path);
-                }
-                $user->forceDelete();
-
-                return redirect()->route("admin.$this->table.black_list")
-                    ->with('success', 'Đã xóa vĩnh viễn người này');
+        if ($user = User::onlyTrashed()->find($id)) {
+            if (File::isFile("storage/$user->avatar")) {
+                $link = "storage/$user->avatar";
+                $path = "storage/avatars/$user->id";
+                unlink($link);
+                rmdir($path);
             }
+            $user->forceDelete();
+
+            return redirect()->route("admin.$this->table.black_list")
+                ->with('success', 'Đã xóa vĩnh viễn người này');
+        }
 
         return redirect()->route("admin.$this->table.black_list")
             ->with('success', "Không thành công");

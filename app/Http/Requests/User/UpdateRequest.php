@@ -45,14 +45,6 @@ class UpdateRequest extends FormRequest
                 'string',
                 Rule::unique(User::class, 'email')->ignore($this->id),
             ],
-            'image_old' => [
-                'nullable',
-                'present'
-            ],
-            'image_new' => [
-                'nullable',
-                'filled'
-            ]
         ];
     }
 }

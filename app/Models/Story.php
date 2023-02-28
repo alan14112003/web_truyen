@@ -86,7 +86,7 @@ class Story extends Model
         return $this->hasMany(View::class);
     }
 
-    public function star()
+    public function star(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Star::class);
     }

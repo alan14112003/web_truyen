@@ -277,6 +277,7 @@ class StoryController extends Controller
     {
         $data = $request->validated();
         $image = $request->file('image');
+
         DB::beginTransaction();
         try {
 //            xử lý tác giả
@@ -391,7 +392,7 @@ class StoryController extends Controller
         ]);
     }
 
-    public function update(UpdateRequest $request, $id)
+    public function update(UpdateRequest $request, $id): \Illuminate\Http\RedirectResponse
     {
         DB::beginTransaction();
         try {
@@ -411,15 +412,21 @@ class StoryController extends Controller
 
             //              Xử lý đăng truyện
             $story = $this->model->find($id);
-            $slug = SlugService::createSlug(Story::class, 'slug', $request->name);
+
+            $slug = $story->slug;
+            if(Str::lower($request->name) !== Str::lower($story->name)) {
+                $slug = SlugService::createSlug(Story::class, 'slug', $request->name);
+            }
+
             $story->update([
-                    'name' => Str::lower($request->name),
-                    'status' => (int)$request->status,
-                    'author_id' => $author->id,
-                    'descriptions' => $request->descriptions,
-                    'level' => (int)$request->level,
-                    'slug' => $slug,
-                ]);
+                'name' => Str::lower($request->name),
+                'status' => (int)$request->status,
+                'author_id' => $author->id,
+                'descriptions' => $request->descriptions,
+                'level' => (int)$request->level,
+                'slug' => $slug,
+                'pin' => StoryPinEnum::EDITING,
+            ]);
             if (isset($request->author_2)) {
                 $story->update([
                     'author_2_id' => $author_2->id,
@@ -559,8 +566,8 @@ class StoryController extends Controller
             Chapter::query()
                 ->where('pin', '>', ChapterPinEnum::EDITING)
                 ->where('story_id', $id)->update([
-                'pin' => ChapterPinEnum::UPLOADING,
-            ]);
+                    'pin' => ChapterPinEnum::UPLOADING,
+                ]);
             $story->update([
                 'pin' => StoryPinEnum::EDITING,
             ]);
@@ -586,8 +593,8 @@ class StoryController extends Controller
             Chapter::query()->where('pin', ChapterPinEnum::UPLOADING)
                 ->where('story_id', $id)
                 ->update([
-                'pin' => ChapterPinEnum::APPROVED,
-            ]);
+                    'pin' => ChapterPinEnum::APPROVED,
+                ]);
         }
         return redirect()->back()->with('success', 'đã đăng truyện thành công');
     }

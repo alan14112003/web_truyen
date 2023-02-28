@@ -15,7 +15,7 @@ use App\Models\Story;
 use App\Models\View as ViewAlias;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -23,11 +23,11 @@ use Illuminate\Support\Facades\DB;
 class HomeController extends Controller
 {
 //    trang chủ
-    public function index(Request $request): Factory|View|Application
+    public function index(Request $request): Factory|\Illuminate\Contracts\View\View|Application
     {
         $q = $request->get('q');
 
-//        láy ra các truyện theo thứ tự từ mới đến cũ
+//        láy ra các truyện theo thứ tự ngẫu nhiên
         $stories = Story::query()
             ->select('*')
             ->with('categories')
@@ -47,7 +47,7 @@ class HomeController extends Controller
             ", 'chapter_new_time')
             ->where('pin', '>', StoryPinEnum::UPLOADING)
             ->where('name', 'like', "%$q%")
-            ->inRandomOrder()
+            ->latest('updated_at')
             ->paginate(12);
 
 //        lấy ra truyện được ghim
@@ -67,7 +67,7 @@ class HomeController extends Controller
             ", 'chapter_new_time')
             ->where('pin', '=', StoryPinEnum::PINNED)
             ->inRandomOrder()
-            ->limit(6)
+            ->limit(10)
             ->get()
         ;
 
@@ -98,7 +98,7 @@ class HomeController extends Controller
     }
 
 //    trang thể loại
-    public function showCategories($slug)
+    public function showCategories($slug): Factory|\Illuminate\Contracts\View\View|Application
     {
         $category = Category::query()->where('slug', $slug)->first();
         $data = Story::query()
@@ -123,8 +123,11 @@ class HomeController extends Controller
             ->where('c.slug', $slug)
             ->where('stories.pin', '>', StoryPinEnum::UPLOADING)
             ->inRandomOrder()
-            ->get()
+            ->paginate(12)
         ;
+
+        View::share('title', "Thể loại - $category->name");
+
         return view('page.category', [
             'data' => $data,
             'category' => $category,
@@ -132,7 +135,7 @@ class HomeController extends Controller
     }
 
 //    trang truyện
-    public function showStory(Request $request,$slug)
+    public function showStory(Request $request,$slug): Factory|\Illuminate\Contracts\View\View|Application
     {
         $sort = $request->get('sort');
 
@@ -169,6 +172,8 @@ class HomeController extends Controller
         }
         $chapters = $query->get();
 
+        View::share('title', ucfirst($story->name));
+
         return view('page.story', [
             'story' => $story,
             'chapters' => $chapters,
@@ -179,7 +184,7 @@ class HomeController extends Controller
     }
 
 //    trang chương truyện
-    public function showChapter(Request $request, $slug, $number): Factory|View|Application
+    public function showChapter(Request $request, $slug, $number): Factory|\Illuminate\Contracts\View\View|Application
     {
         $story = Story::query()->where('slug', $slug)->first();
 
@@ -215,6 +220,8 @@ class HomeController extends Controller
         $first = reset($chapterList);
         $last = end($chapterList);
 
+        View::share('title', "Chương $chapter->number - " . ucfirst($story->name));
+
         return view('page.chapter', [
             'story' => $story,
             'chapter' => $chapter,
@@ -227,7 +234,7 @@ class HomeController extends Controller
     }
 
 //    trang tìm truyện nâng cao
-    public function advancedSearch(Request $request)
+    public function advancedSearch(Request $request): Factory|\Illuminate\Contracts\View\View|Application
     {
         $q = $request->get('q');
         $categoriesFilter = $request->get('categories');
@@ -278,7 +285,7 @@ class HomeController extends Controller
         }
 
 
-        $data = $query->paginate();
+        $data = $query->paginate(12);
 
 
         //        categories
@@ -305,6 +312,8 @@ class HomeController extends Controller
             ->get()
         ;
 
+        View::share('title', 'Tìm truyện nâng cao');
+
         return view("page.advanced_search", [
             'data' => $data,
             'q' => $q,
@@ -322,24 +331,28 @@ class HomeController extends Controller
     }
 
 //    trang xếp hạng truyện theo view
-    public function showRank()
+    public function showRank(): Factory|\Illuminate\Contracts\View\View|Application
     {
         $data = ViewAlias::showTopViewAll();
+
+        View::share('title', 'Top truyện xếp hạng');
 
         return view('page.show_rank', [
             'data' => $data,
         ]);
     }
 
-    public function showHistory()
+    public function showHistory(): Factory|\Illuminate\Contracts\View\View|Application
     {
         $histories = History::showHistoriesByGuest();
         if (Auth::check()) {
             $histories = History::showHistoriesByUser();
         }
 
+        View::share('title', 'Lịch sử đọc truyện');
+
         return view('page.show_history', [
-           'histories' => $histories,
+            'histories' => $histories,
         ]);
     }
 }

@@ -32,7 +32,7 @@
                                 <span class="text-lowercase">{{ auth()->user()->name }}</span>
                             </button>
                             <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href="#">Thông tin cá nhân</a>
+                                <a class="dropdown-item" href="{{ route('user.info.edit', auth()->id()) }}">Thông tin cá nhân</a>
                                 <a class="dropdown-item" href="{{ route('user.index') }}">Truyện của tôi</a>
                                 @if(auth()->user()->level_id > 1)
                                     <a class="dropdown-item" href="{{ route('admin.index') }}">Đến trang quản lý</a>
@@ -101,7 +101,7 @@
                                 <span class="text-lowercase">{{ auth()->user()->name }}</span>
                             </button>
                             <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href="#">Thông tin cá nhân</a>
+                                <a class="dropdown-item" href="{{ route('user.info.edit', auth()->id()) }}">Thông tin cá nhân</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="{{ route('user.index') }}">Truyện của tôi</a>
                                 <div class="dropdown-divider"></div>

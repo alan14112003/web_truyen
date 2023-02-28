@@ -43,6 +43,7 @@ Route::controller(HomeController::class)->group(function () {
     Route::get('/lich-su', 'showHistory')->name('show_history');
     Route::get('/truyen/{slug}', 'showStory')->name('show_story');
     Route::get('/truyen/{slug}/chuong-{number}', 'showChapter')->name('show_chapter');
+    Route::get('/thong-tin-nguoi-dang-{id}', 'showInfo')->name('show_info');
 });
 
 Route::post('star/create/{story}', [StarController::class, 'create'])->name('star.create');
@@ -51,7 +52,7 @@ Route::post('/history/destroy', [HistoryController::class, 'destroy'])->name('hi
 
 Route::post('/call_delete', function (){
     return view('call_delete');
- }); 
+ });
 
 Route::get('/test', function (){
    return sys_get_temp_dir();

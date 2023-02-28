@@ -28,7 +28,7 @@ class LevelController extends Controller
     {
         $q = $request->get('q');
         $query = $this->model->where('name', 'like', "%$q%")
-                    ->withCount('user');
+            ->withCount('user');
         $data = $query->paginate();
 
         $this->title = 'Quản lý cấp bậc';

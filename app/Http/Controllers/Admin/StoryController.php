@@ -158,8 +158,8 @@ class StoryController extends Controller
             ->groupBy('stories.id')
         ;
         if (!is_null($query->first()->author_2_id)) {
-                $query->addSelect(DB::raw('author_2.name as author_2'))
-                    ->join('authors as author_2', 'stories.author_2_id', '=', 'author_2.id');
+            $query->addSelect(DB::raw('author_2.name as author_2'))
+                ->join('authors as author_2', 'stories.author_2_id', '=', 'author_2.id');
         }
         $story = $query->first();
 

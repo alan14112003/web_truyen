@@ -20,6 +20,14 @@ final class StoryStatusEnum extends Enum
             'Đã hoàn' => self::COMPLETE,
         ];
     }
+
+    public static function checkStatusByValue($value): bool
+    {
+        if ($value === self::UNFINISHED)
+            return false;
+        return true;
+    }
+
     public static function getNameByValue($value) {
         return array_search($value, self::getArrayView(), true);
     }
